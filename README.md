@@ -1,0 +1,2 @@
+# album
+Album Ripping Script
