@@ -39,7 +39,10 @@ print $cd{title}, "\n";
 #my $artist_dir = set_artist_dir($cd{artist});
 my $artist_dir = '';
 
+
 my $album_dir = set_album_dir( $cd{artist}, $cd{title} );
+
+
 my $flac_dir = set_flac_dir( $cd{artist}, $cd{title} );
 
 print "\nAlbum dir: $album_dir\n\n";
