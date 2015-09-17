@@ -257,7 +257,19 @@ sub set_artist_dir {
     return $artist_dir;
 }
 
-
+sub _get_random_str {
+	my $str;
+	
+	my @letters = qw(a b c d e f g h i j k l m n o p q r s t u v w x y z);
+	my $range = 25;
+	my $random_number;
+	
+	for (my $i = 0; $i < 4; $i++) {
+		$random_number = int(rand($range));
+		$str = $str . $letters[$random_number];		
+	}
+	return $str;
+}
 #:::::::::::::::::::::::::::::::::::
 #:::::::::::::::::::::::::::::::::::
 #::: set_album_dir()
@@ -274,9 +286,25 @@ sub set_album_dir {
     #2011.01.23
     my $album_dir = "/home/robertm/Desktop/$album";
     print "album_dir == $album_dir\n" if $DEBUG;
-    if (! -e $album_dir) {
-        mkdir $album_dir;
-    }
+    
+    ## this checks to see if the album directory
+    ## exists....
+    ## 
+    ## if it does grab a random string, add it to 
+    ## the directory name and create
+    ## that new directory.
+    ## 
+    ## this will keep us from clobbering any existing
+    ## directories
+    while (1) {
+	    if (! -e $album_dir) {
+	        mkdir $album_dir;
+	        last;
+	    } else {
+			my $random_str = _get_random_str();
+			$album_dir = $album_dir . '--' . $random_str;
+		}	    
+	}
     return $album_dir;        
 }
 
@@ -293,9 +321,16 @@ sub set_flac_dir {
     if (! -e "/home/robertm/Desktop/flac") {
         mkdir "/home/robertm/Desktop/flac";
     }
-    if (! -e $flac_dir) {
-        mkdir $flac_dir;
-    }
+    
+    while (1) {
+	    if (! -e $flac_dir) {
+	        mkdir $flac_dir;
+	        last;
+	    } else {
+			my $random_str = _get_random_str();
+			$flac_dir = $flac_dir . '--' . $random_str;
+		}
+	}
     return $flac_dir;        
 }
 
