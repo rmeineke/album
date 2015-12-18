@@ -220,7 +220,7 @@ sub rip_album {
         if (-e '/home/robertm/Desktop/cover.jpg') {
             $artfile = '/home/robertm/Desktop/cover.jpg';
         } else {
-            $artfile = '/home/robertm/scripts/cover.jpg';
+            $artfile = '/home/robertm/scripts/album.jpg';
         }
         #$cmd = "metaflac --remove-all-tags --set-tag=\"ALBUM=$$cd{title}\" --set-tag=\"TITLE=$$cd{track}[$i]\" --set-tag=\"ARTIST=$$cd{artist}\" --set-tag=\"TRACKNUMBER=$current_track_num\" --set-tag=\"TRACKTOTAL=$num\" --set-tag=\"ALBUMARTIST=albumartist\" --import-picture-from=\"$artfile\" \"$flac_dir/$current_flac_name\"";
         $cmd = "metaflac --remove-all-tags  --set-tag=\"DATE=$year\"  --set-tag=\"ALBUM=$$cd{title}\" --set-tag=\"TITLE=$$cd{track}[$i]\" --set-tag=\"ARTIST=$$cd{artist}\" --set-tag=\"TRACKNUMBER=$current_track_num\" --set-tag=\"TRACKTOTAL=$num\" --set-tag=\"ALBUMARTIST=$album_artist\" --import-picture-from=\"$artfile\"  \"$flac_dir/$current_flac_name\"";
