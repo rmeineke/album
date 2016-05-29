@@ -15,6 +15,9 @@ use MP3::Info;
 use MP3::Tag;
 
 use File::Copy;
+use File::Copy qw(move);
+
+
 
 $VERSION     = 1.00;
 @ISA         = qw(Exporter);
@@ -239,7 +242,7 @@ sub rip_album {
     system $cmd;
     
     
-    move('/home/robertm/Desktop/cover.jpg /home/robertm/Desktop/last_used_cover.jpg');
+    move('/home/robertm/Desktop/cover.jpg', '/home/robertm/Desktop/last_used_cover.jpg');
     #unlink '/home/robertm/Desktop/cover.jpg';
     unlink 'track00.cdda.wav';
 }#rip_album
@@ -349,7 +352,9 @@ sub fix_all_cd_info {
     print "--------fix_all_cd_info()\n" if $DEBUG;
 
     $$cd{artist} = fix_the($$cd{artist});
-    #$$cd{title} = fix_the($$cd{title});
+    
+    #added back in ..... 2016.05.29
+    $$cd{title} = fix_the($$cd{title});
     
     my $num = $$cd{tno};
 
