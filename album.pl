@@ -11,20 +11,30 @@ use warnings;
 use strict;
 use RipRoutines
   qw{get_cd_info fix_all_cd_info set_artist_dir set_album_dir set_flac_dir rip_album check_artist};
+use File::Copy "cp";
 
+use Cwd;
 
-print "Go get the album art and \n";
-print "save it as 'cover.jpg' on \n";
-print "your DESKTOP!\n\n";
-print "Press enter to continue.\n";
-my $resp = <STDIN>;
+#print "Go get the album art and \n";
+#print "save it as 'cover.jpg' on \n";
+#print "your DESKTOP!\n\n";
+#print "Press enter to continue.\n";
+#my $resp = <STDIN>;
 
 
 my $imageDir = '/home/robertm/Desktop';
 opendir DIR, "$imageDir" or die "Can't open $imageDir $!";
     my @images = grep { /\.(?:png|PNG|gif|GIF|jpg|JPG|jpeg|JPEG)$/i } readdir DIR;
 closedir DIR;
-                
+
+#add generic cover art ... 
+#push(@images, '../scripts/album/GENERIC.COVER.jpg');
+my $d = getcwd;
+print $d, "\n";
+
+cp ('album.jpg', '/home/robertm/Desktop/album.jpg');
+
+
 my $count = 1;
 foreach (@images) {
     print "$count -- $_\n";
