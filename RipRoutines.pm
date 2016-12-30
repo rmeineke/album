@@ -10,10 +10,7 @@ BEGIN { $CDDB_get::debug = 1 }
 
 use CDDB_get qw( get_cddb );
 use MP3::Info;
-#use LWP::UserAgent;
-#use Net::Amazon;
 use MP3::Tag;
-
 use File::Copy;
 use File::Copy qw(move);
 
@@ -44,7 +41,9 @@ my $DEBUG = 1;
 sub fix_file_name {
     print "--------fix_file_name()\n" if $DEBUG;
     my $track = shift;
-    $track =~ s/[^ a-zA-Z0-9_.']//g;
+    
+    #added parens
+    $track =~ s/[^ a-zA-Z0-9_.'()]//g;
     $track =~ s/\s+$//;
     return $track;
 }
@@ -120,8 +119,6 @@ sub _commify {
 sub rip_album {
     print "--------rip_album()\n" if $DEBUG;
     my $cd         = shift;
-    my $artist_dir = shift;
-    my $album_dir  = shift;
     my $flac_dir   = shift;
     my $album_artist = shift;
     
@@ -145,81 +142,15 @@ sub rip_album {
         my $track_name        = $$cd{track}[$i];
         print "Track name: $track_name\n" if $DEBUG;
         $track_name = fix_file_name($track_name);
-        my $current_track_name = sprintf "%02d - %s.mp3", $current_track_num, $track_name;
+        #my $current_track_name = sprintf "%02d - %s.mp3", $current_track_num, $track_name;
         my $current_flac_name =  sprintf "%02d - %s.flac", $current_track_num, $track_name;
         
-        print "Current track name: $current_track_name\n" if $DEBUG;
-        $cmd = qq{lame -b 320 "$current_wav" "$album_dir/$current_track_name"};
-        system $cmd;
-        print "$cmd\n" if $DEBUG;
-
-        #print "<><><><><><><><><>\n";
-        #print "<><><><><><><><><>\n";
-        print "<><><><><><><><><>\n";
-        my $mp3 = MP3::Tag->new("$album_dir/$current_track_name");
-        $mp3->get_tags();
-        if ( exists $mp3->{ID3v2} ) {
-            print "Found id3v2\n";
-        }
-        else {
-            #print "ID3v2 >not< found\n";
-            $mp3->new_tag("ID3v2");
-            $mp3->{ID3v2}->add_frame( "TALB", "$$cd{title}" );
-            $mp3->{ID3v2}->add_frame( "TIT2", "$$cd{track}[$i]" );
-            $mp3->{ID3v2}->add_frame( "TRCK", "$current_track_num\/$num" );
-            
-            #TPE1 is the "Artist"
-            $mp3->{ID3v2}->add_frame( "TPE1", "$$cd{artist}" );
-            #TPE2 is the "Album Artist"
-            $mp3->{ID3v2}->add_frame( "TPE2", "$album_artist" );
-            $mp3->{ID3v2}->add_frame( "TYER", "$year" );
-
-            my $artfile = '/home/robertm/Desktop/cover.jpg';
-            if (!-e $artfile) {
-				$artfile = '/home/robertm/scripts/album.jpg';
-				print "\n%%%%%%%%%%%%%%%%%%%%%%%\n";
-				print "%%%%%%%%%%%%%%%%%%%%%%%\n";
-				print "%%%%%%%%%%%%%%%%%%%%%%%\n";
-				print "--- generic cover art used ---\n";
-				print "%%%%%%%%%%%%%%%%%%%%%%%\n";
-				print "%%%%%%%%%%%%%%%%%%%%%%%\n";
-				print "%%%%%%%%%%%%%%%%%%%%%%%\n\n";
-				
-			}
-            ##############
-            # if cover exists
-            ##############
-            my $art;
-            {
-                local $/ = undef;
-                open my $jpg, '<', $artfile or die "Couldn't open file ($artfile): $!";
-                binmode $jpg;
-                $art = <$jpg>;
-                close $jpg;
-            }
-
-            $mp3->{ID3v2}->add_frame( "APIC", chr(0x0), 'image/jpeg', chr(0x0), 'Cover Art', $art );
-
-            $mp3->{ID3v2}->write_tag;
-        }    #if/else
-        print "<><><><><><><><><>\n";
-        #print "<><><><><><><><><>\n";
-        #print "<><><><><><><><><>\n";
-        
-        #rsm 2014.08.25 .... removing these instead of saving into a directory
-        
-        #2015.05.08 .............................. 
+       
         $cmd = "flac -f --best --keep-foreign-metadata --output-name=\"$flac_dir/$current_flac_name\" $current_wav";
         print $cmd, "\n";
         system $cmd;
         
-        #2015.08.06 rsm
-        #you need to check if this even exists .... I think this is
-        #causing a fault in the flac tags when it doesn't exist.
-        #
-        #use the default if it does not exist
         my $artfile;
-        #my $artfile = '/home/robertm/Desktop/cover.jpg';
         if (-e '/home/robertm/Desktop/cover.jpg') {
             $artfile = '/home/robertm/Desktop/cover.jpg';
         } else {
@@ -233,16 +164,12 @@ sub rip_album {
         print "\n\n\n\n$cmd\n\n\n\n";
         
         unlink "$current_wav";
-        #move($current_wav, $wav_dir);
-        
-        #rsm 2014.08.25
-        #move ($current_wav, "$wav_dir/$current_wav");
     }#for
     $cmd = 'eject -v /dev/sr0';
     system $cmd;
     
     
-    move('/home/robertm/Desktop/cover.jpg', '/home/robertm/Desktop/last_used_cover.jpg');
+    #move('/home/robertm/Desktop/cover.jpg', '/home/robertm/Desktop/last_used_cover.jpg');
     #unlink '/home/robertm/Desktop/cover.jpg';
     unlink 'track00.cdda.wav';
 }#rip_album
@@ -254,14 +181,14 @@ sub rip_album {
 #:::::::::::::::::::::::::::::::::::
 sub set_artist_dir {
 
-    print "--------set_artist_dir()\n" if $DEBUG;
-    my $artist     = shift;
-    my $artist_dir = "$artist";
-    print "artist_dir == $artist_dir\n" if $DEBUG;
-    if ( !-e $artist_dir ) {
-        mkdir $artist_dir;
-    }
-    return $artist_dir;
+    #print "--------set_artist_dir()\n" if $DEBUG;
+    #my $artist     = shift;
+    #my $artist_dir = "$artist";
+    #print "artist_dir == $artist_dir\n" if $DEBUG;
+    #if ( !-e $artist_dir ) {
+        #mkdir $artist_dir;
+    #}
+    #return $artist_dir;
 }
 
 sub _get_random_str {
@@ -322,13 +249,9 @@ sub set_flac_dir {
     $album =~ s/[^ a-zA-Z0-9_.']//g;
     $album =~ s/\s+$//;
     
-    my $flac_dir = "/home/robertm/Desktop/flac/" . $album;
+    my $flac_dir = "/home/robertm/Desktop/" . $artist . ' - ' . $album;
     print "flac_dir == $flac_dir\n" if $DEBUG;
-    
-    if (! -e "/home/robertm/Desktop/flac") {
-        mkdir "/home/robertm/Desktop/flac";
-    }
-    
+        
     while (1) {
 	    if (! -e $flac_dir) {
 	        mkdir $flac_dir;
@@ -338,6 +261,7 @@ sub set_flac_dir {
 			$flac_dir = $flac_dir . '--' . $random_str;
 		}
 	}
+    print('--- set_flac_dir about to return: ' . $flac_dir);
     return $flac_dir;        
 }
 
@@ -423,24 +347,12 @@ sub get_cd_info {
     
     print "==> ", $cd{title}, "\n";
     print "==> ", $cd{artist}, "\n";
-    #_fetch_album_art($cd{artist}, $cd{title});
-
 
     if (defined $cd{title}) {
         print "Auto\n";
-        
-        #print 'Does the artist   ||', $cd{artist}, '||   need altering? [y|n] ';
-        #my $resp = <STDIN>;
-        
-        #if ($resp =~ m/\A[Yy]/) {
-             #$cd{artist} = _alter_artist($cd{artist});
-        #}
-        
-        return %cd;
     } else {
         print "Manual\n";
         %cd = _prompt_for_cd_info();
-        return %cd;
     }
     return %cd;
 }
