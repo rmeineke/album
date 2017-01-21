@@ -145,7 +145,12 @@ sub rip_album {
         #my $current_track_name = sprintf "%02d - %s.mp3", $current_track_num, $track_name;
         my $current_flac_name =  sprintf "%02d - %s.flac", $current_track_num, $track_name;
         
-       
+        print "////////////////////////////////////////////////\n";
+        print "////////////////////////////////////////////////\n";
+        print "flac_dir ....... $flac_dir\n";
+        print "////////////////////////////////////////////////\n";
+        print "////////////////////////////////////////////////\n";
+        
         $cmd = "flac -f --best --keep-foreign-metadata --output-name=\"$flac_dir/$current_flac_name\" $current_wav";
         print $cmd, "\n";
         system $cmd;

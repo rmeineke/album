@@ -5,6 +5,7 @@
 #sudo apt-get install libmp3-tag-perl
 #sudo apt-get install cdparanoia
 #sudo apt-get install lame
+#sudo apt-get install flac
 
 
 use warnings;
