@@ -69,19 +69,19 @@ print ".............................. $cd{artist} <<<<<<<<<<<<<<<<<<<< artist\n"
 print $cd{title}, "\n";
 
 #my $artist_dir = set_artist_dir($cd{artist});
-my $artist_dir = '';
+# my $artist_dir = '';
 
 
-my $album_dir = set_album_dir( $cd{artist}, $cd{title} );
+# my $album_dir = set_album_dir( $cd{artist}, $cd{title} );
 
 
 my $flac_dir = set_flac_dir( $cd{artist}, $cd{title} );
 
-print "\nAlbum dir: $album_dir\n\n";
+# print "\nAlbum dir: $album_dir\n\n";
 print "\nFlac dir: $flac_dir\n\n";
 
 
-rip_album( \%cd, $artist_dir, $album_dir, $flac_dir, $album_artist);
+rip_album( \%cd, $flac_dir, $album_artist);
 
 my $logfile = '/home/robertm/Desktop/Music_Changes.txt';
 open(OUTPUT, ">>$logfile") or die "$0: could not open the input file ($logfile): $!\n";
