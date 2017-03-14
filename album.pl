@@ -16,25 +16,11 @@ use File::Copy "cp";
 
 use Cwd;
 
-#print "Go get the album art and \n";
-#print "save it as 'cover.jpg' on \n";
-#print "your DESKTOP!\n\n";
-#print "Press enter to continue.\n";
-#my $resp = <STDIN>;
-
-
+cp ('album.jpg', '/home/robertm/Desktop/album.jpg');
 my $imageDir = '/home/robertm/Desktop';
 opendir DIR, "$imageDir" or die "Can't open $imageDir $!";
     my @images = grep { /\.(?:png|PNG|gif|GIF|jpg|JPG|jpeg|JPEG)$/i } readdir DIR;
 closedir DIR;
-
-#add generic cover art ... 
-#push(@images, '../scripts/album/GENERIC.COVER.jpg');
-my $d = getcwd;
-print $d, "\n";
-
-cp ('album.jpg', '/home/robertm/Desktop/album.jpg');
-
 
 my $count = 1;
 foreach (@images) {
@@ -68,13 +54,6 @@ print ".............................. $cd{artist} <<<<<<<<<<<<<<<<<<<< artist\n"
 
 print $cd{title}, "\n";
 
-#my $artist_dir = set_artist_dir($cd{artist});
-# my $artist_dir = '';
-
-
-# my $album_dir = set_album_dir( $cd{artist}, $cd{title} );
-
-
 my $flac_dir = set_flac_dir( $cd{artist}, $cd{title} );
 
 # print "\nAlbum dir: $album_dir\n\n";
@@ -89,26 +68,3 @@ print OUTPUT "Artist:\t\t$cd{artist}\n";
 print OUTPUT "Album:\t\t$cd{title}\n\n\n\n";
 close(OUTPUT);
 exit(0);
-__END__
-
-If These Walls Could Speak
-This Must Be the Place (Na�ve Melody)
-You're Gonna Make Me Lonesome When You Go
-==> Cover Girl
-==> Shawn Colvin
-Auto
---------check_artist()
-Does the artist   ||Shawn Colvin||   need altering? [y|n] y
---------_alter_artist()
-Enter new artist name: Colvin, Shawn
---------fix_all_cd_info()
---------fix_the()
-Shawn Colvin
-Shawn Colvin
-.............................. Colvin, Shawn <<<<<<<<<<<<<<<<<<<< album artist
-.............................. Shawn Colvin <<<<<<<<<<<<<<<<<<<< artist
-Cover Girl
---------set_album_dir()
-album_dir == /home/robertm/Desktop/Cover Girl
---------set_flac_dir()
-flac_dir == /home/robertm/Desktop/flac/Cover Girl
