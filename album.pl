@@ -16,7 +16,7 @@ use File::Copy "cp";
 
 use Cwd;
 
-cp ('album.jpg', '/home/robertm/Desktop/album.jpg');
+cp('album.jpg', '/home/robertm/Desktop/album.jpg') or die "\n\n >>> Unable to find album.jpg\n\n";
 my $imageDir = '/home/robertm/Desktop';
 opendir DIR, "$imageDir" or die "Can't open $imageDir $!";
     my @images = grep { /\.(?:png|PNG|gif|GIF|jpg|JPG|jpeg|JPEG)$/i } readdir DIR;
