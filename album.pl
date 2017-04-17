@@ -7,11 +7,11 @@
 #sudo apt-get install lame
 #sudo apt-get install flac
 
+use lib '.';
 
 use warnings;
 use strict;
-use RipRoutines
-  qw{get_cd_info fix_all_cd_info set_artist_dir set_album_dir set_flac_dir rip_album check_artist};
+use RipRoutines qw{get_cd_info fix_all_cd_info set_artist_dir set_album_dir set_flac_dir rip_album check_artist};
 use File::Copy "cp";
 
 use Cwd;
