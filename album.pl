@@ -22,12 +22,13 @@ opendir DIR, "$imageDir" or die "Can't open $imageDir $!";
     my @images = grep { /\.(?:png|PNG|gif|GIF|jpg|JPG|jpeg|JPEG)$/i } readdir DIR;
 closedir DIR;
 
+print "\n\n\n";
 my $count = 1;
 foreach (@images) {
     print "$count -- $_\n";
     $count = $count + 1;
 }
-print "\n\n\n";
+print "\n";
 print "Which image:\n";
 my $img_choice = <STDIN>;
 print "$images[$img_choice - 1]\n";
